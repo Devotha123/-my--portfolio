@@ -1,0 +1,27 @@
+
+
+name: CI
+
+on:
+  
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  
+  build:
+    
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: build image
+        run: docker build -t Devotha123/portfolio .
+
+      - name: push image 
+        run: |
+          docker login -u Devotha123 -p ${{secrets.REGISTRY_PASS}}
+            docker push Devotha123/portfolio 
