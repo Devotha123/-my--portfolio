@@ -12,9 +12,9 @@ permissions:
 env:
   PYTHON_VERSION: "3.11"
   IMAGE_NAME: portfolio
-  AWs_REGION: us_east-1
+  AWs_REGION: us-east-1
   ACCOUNT_ID: ${{ secrets.ACCOUNT_ID }}
-  ECR_REPO: $ACCOUNT_ID.edk.ecr.$AWs_REGION.amazonaws.com/$IMAGE_NAME
+  ECR_REPO: ${{ secrets.ACCOUNT_ID}}.edk.ecr.$AWs_REGION.amazonaws.com/$IMAGE_NAME
 
 jobs:
   build:
@@ -37,7 +37,7 @@ jobs:
       - name: configure AWScredentials using OIDC
         uses: aws-actions/configure-aws-credentials@v2
         with:
-            role-to-assume: ${{ secrets. ROLE-ARN }} 
+            role-to-assume: ${{ secrets. ROLE_ARN }} 
             aws-region: ${{ env.AWs_REGION }}      
 
       - name: Build Docker image
