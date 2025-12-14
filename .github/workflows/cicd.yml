@@ -14,7 +14,7 @@ env:
   IMAGE_NAME: portfolio
   AWs_REGION: us-east-1
   ACCOUNT_ID: ${{ secrets.ACCOUNT_ID }}
-  ECR_REPO: ${{ secrets.ACCOUNT_ID}}.edk.ecr.$AWs_REGION.amazonaws.com/$IMAGE_NAME
+  ECR_REPO: ${ACCOUNT_ID}.dkr.ecr.${AWS_ID}.amazonaws.com/dev
 
 jobs:
   build:
@@ -38,10 +38,35 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v2
         with:
             role-to-assume: ${{ secrets. ROLE_ARN }} 
-            aws-region: ${{ env.AWs_REGION }}      
-
+            aws-region: ${{ env.AWs_REGION }} 
+      - name: login to amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+            
       - name: Build Docker image
-        run: docker build -t devotha123/portcicd .
+        run: 
+          docker build -t ${{env. IMAGE_NAME}} .
+       # tag Docker image  for ECR
+       
+      - name: tag docker image
+        run: 
+         dockertag ${{env.IMAGE_NAME}}:latest ${{env.ECR_REPO}}
+         :latest
+      # scan Docker Image with Trivy
+
+      - name: scan Docker Image with Trivy
+        uses: aquasecurity/trivy-actions@master
+        with:
+          image-ref:${{env.ECR_REPO }}: latest
+          format: table
+          exit-code: '1' # fail workflow on critical/high  vulnerabilities
+          serverity: CRITICAL, HIGH
+
+    # Push docker image to ECR
+      - name: push docker image to amazon ECR
+        run: 
+          docker push ${{env.ECR_REPO}}
+    
       - name: check credentials 
         run: aws s3 ls
 
