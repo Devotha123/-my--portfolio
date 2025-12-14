@@ -49,7 +49,8 @@ jobs:
        # tag Docker image  for ECR
 
       - name: Tag Docker image
-        run: docker tag ${{ env.IMAGE_NAME }}:latest ${{ env.ECR_REPO }}:latest
+        run: 
+          docker tag ${{ env.IMAGE_NAME }}:latest ${{ env.ECR_REPO }}:latest
 
       # scan Docker Image with Trivy
 
