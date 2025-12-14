@@ -53,14 +53,14 @@ jobs:
           docker tag ${{ env.IMAGE_NAME }}:latest ${{ env.ECR_REPO }}:latest
 
       # scan Docker Image with Trivy
-
-      - name: scan Docker Image with Trivy
-        uses: aquasecurity/trivy-action@master
+      - name: Scan Docker Image with Trivy
+        uses: aquasecurity/trivy-action@0.28.0
         with:
-          image-ref:${{env.ECR_REPO }}: latest
-          format: table
-          exit-code: '1' # fail workflow on critical/high  vulnerabilities
-          serverity: CRITICAL, HIGH
+         image-ref: ${{ env.ECR_REPO }}:latest
+         format: table
+         exit-code: '1' # Fail workflow on critical/high vulnerabilities
+         severity: CRITICAL,HIGH
+
 
     # Push docker image to ECR
       - name: push docker image to amazon ECR
