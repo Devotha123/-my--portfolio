@@ -50,7 +50,7 @@ jobs:
        
       - name: tag docker image
         run: 
-         dockertag ${{env.IMAGE_NAME}}:latest ${{env.ECR_REPO}}
+         docker tag ${{env.IMAGE_NAME}}:latest ${{env.ECR_REPO}}
          :latest
       # scan Docker Image with Trivy
 
